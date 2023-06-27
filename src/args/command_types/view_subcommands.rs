@@ -17,8 +17,8 @@ pub struct AddViews {
 }
 
 pub fn handle_add_views(add_views: AddViews) {
-    let path = format!("{}/videos.bc", std::env::var("OUT_DIR").unwrap());
-    let path = Path::new(path.as_str());
+    let path = concat!(env!("HOME"), "/.rustflix/videos.bc");
+    let path = Path::new(path);
     let mut videos: Vec<Video> = if path.exists() {
         let file = File::open(path).unwrap();
         bincode::deserialize_from(file).unwrap()
@@ -78,8 +78,8 @@ pub fn handle_add_views(add_views: AddViews) {
 }
 
 pub fn handle_show_views(video_query: VideoQuery) {
-    let path = format!("{}/videos.bc", std::env::var("OUT_DIR").unwrap());
-    let path = Path::new(path.as_str());
+    let path = concat!(env!("HOME"), "/.rustflix/videos.bc");
+    let path = Path::new(path);
     let videos: Vec<Video> = if path.exists() {
         let file = File::open(path).unwrap();
         bincode::deserialize_from(file).unwrap()
