@@ -6,7 +6,7 @@ use std::io;
 use std::path::Path;
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
-pub struct User {
+struct User {
     pub id: u32,
     pub name: String,
     pub email: String,
@@ -379,7 +379,7 @@ pub fn handle_delete_user(user_query: UserQuery) {
             return;
         } else if input == "" {
         } else if input != "y" && input != "yes" {
-            println!("Invalid input");
+            eprintln!("Invalid input");
             input = "".to_string();
             continue;
         }
@@ -452,7 +452,7 @@ pub struct ShowUser {
     pub email: Option<String>,
 }
 
-pub fn handle_list_user(show_user: ShowUser) {
+pub fn handle_list_users(show_user: ShowUser) {
     let path = Path::new("users.bc");
     let users: Vec<User> = if path.exists() {
         let file = File::open(path).unwrap();
