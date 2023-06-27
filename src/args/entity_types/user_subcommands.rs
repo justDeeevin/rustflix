@@ -452,7 +452,7 @@ pub struct ShowUser {
     pub email: Option<String>,
 }
 
-pub fn handle_show_user(show_user: ShowUser) {
+pub fn handle_list_user(show_user: ShowUser) {
     let path = Path::new("users.bc");
     let users: Vec<User> = if path.exists() {
         let file = File::open(path).unwrap();
