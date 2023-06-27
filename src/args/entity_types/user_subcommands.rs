@@ -366,24 +366,23 @@ pub fn handle_delete_user(user_query: UserQuery) {
         user
     );
 
-    let mut input = String::new();
-
+    let mut input = "".to_string();
     loop {
         io::stdin()
             .read_line(&mut input)
             .expect("Failed to read line");
 
-        input = input.trim().to_lowercase();
-        if input == "n" || input == "no" {
-            println!("User deletion cancelled.");
-            return;
-        } else if input == "" {
-        } else if input != "y" && input != "yes" {
-            eprintln!("Invalid input");
-            input = "".to_string();
-            continue;
+        match input.to_lowercase().trim() {
+            "y" | "yes" | "" => break,
+            "n" | "no" => {
+                println!("User deletion cancelled.");
+                return;
+            }
+            _ => {
+                println!("Invalid input");
+                input = "".to_string();
+            }
         }
-        break;
     }
 
     let user_index = user_index.unwrap();
