@@ -107,6 +107,10 @@ pub struct UpdateVideo {
     /// The new name of the video
     #[arg(long, default_value = None)]
     pub new_name: Option<String>,
+
+    /// The new number of views of the video
+    #[arg(long, default_value = None)]
+    pub new_views: Option<u32>,
 }
 
 /// Error returned from `find_video`
@@ -239,6 +243,37 @@ pub fn handle_update_video(update_video: UpdateVideo) {
         None => {}
     }
 
+    match update_video.new_views {
+        Some(views) => {
+            println!(
+                "Are you sure you want to set the views to {}? ([Y]es/[n]o)",
+                views
+            );
+            let mut input = "".to_string();
+            loop {
+                io::stdin()
+                    .read_line(&mut input)
+                    .expect("Failed to read line");
+
+                match input.to_lowercase().trim() {
+                    "y" | "yes" | "" => {
+                        videos[video_index].views = views;
+                        break;
+                    }
+                    "n" | "no" => {
+                        println!("Aborting update");
+                        return;
+                    }
+                    _ => {
+                        println!("Invalid input");
+                        input = "".to_string();
+                    }
+                }
+            }
+        }
+        None => {}
+    }
+
     let file = File::create(path).unwrap();
     bincode::serialize_into(file, &videos).unwrap();
 
@@ -296,24 +331,23 @@ pub fn handle_delete_video(video_query: VideoQuery) {
         video
     );
 
-    let mut input = String::new();
-
+    let mut input = "".to_string();
     loop {
         io::stdin()
             .read_line(&mut input)
             .expect("Failed to read line");
 
-        input = input.trim().to_lowercase();
-        if input == "n" || input == "no" {
-            println!("Video deletion cancelled.");
-            return;
-        } else if input == "" {
-        } else if input != "y" && input != "yes" {
-            eprintln!("Invalid input");
-            input = "".to_string();
-            continue;
+        match input.to_lowercase().trim() {
+            "y" | "yes" | "" => break,
+            "n" | "no" => {
+                println!("Video deletion cancelled.");
+                return;
+            }
+            _ => {
+                println!("Invalid input");
+                input = "".to_string();
+            }
         }
-        break;
     }
 
     let video_index = video_index.unwrap();
