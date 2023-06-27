@@ -1,4 +1,6 @@
 mod args;
+pub mod utilities;
+
 use args::{CommandType, RustflixArgs};
 use clap::Parser;
 

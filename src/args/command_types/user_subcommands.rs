@@ -1,8 +1,8 @@
+use crate::utilities;
 use clap::Args;
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 use std::fs::File;
-use std::io;
 use std::path::Path;
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
@@ -364,29 +364,14 @@ pub fn handle_delete_user(user_query: UserQuery) {
         panic!("User was found but its index wasn't. This should never happen.");
     }
 
-    println!(
-        "Are you sure you want to remove this user? ([Y]es/[n]o)\n{:?}",
-        user
-    );
-
-    let mut input = "".to_string();
-    loop {
-        io::stdin()
-            .read_line(&mut input)
-            .expect("Failed to read line");
-
-        match input.to_lowercase().trim() {
-            "y" | "yes" | "" => break,
-            "n" | "no" => {
-                println!("User deletion cancelled.");
-                return;
-            }
-            _ => {
-                println!("Invalid input");
-                input = "".to_string();
-            }
-        }
-    }
+    if !utilities::confirm(
+        "Are you sure you want to remove this user?",
+        Some(format!("{:?}", user).as_str()),
+        Some("User deletion cancelled."),
+        Some(true),
+    ) {
+        return;
+    };
 
     let user_index = user_index.unwrap();
 

@@ -1,8 +1,8 @@
+use crate::utilities;
 use clap::Args;
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 use std::fs::File;
-use std::io;
 use std::path::Path;
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
@@ -247,30 +247,17 @@ pub fn handle_update_video(update_video: UpdateVideo) {
 
     match update_video.new_views {
         Some(views) => {
-            println!(
-                "Are you sure you want to set the views to {}? ([Y]es/[n]o)",
-                views
-            );
-            let mut input = "".to_string();
-            loop {
-                io::stdin()
-                    .read_line(&mut input)
-                    .expect("Failed to read line");
-
-                match input.to_lowercase().trim() {
-                    "y" | "yes" | "" => {
-                        videos[video_index].views = views;
-                        break;
-                    }
-                    "n" | "no" => {
-                        println!("Aborting update");
-                        return;
-                    }
-                    _ => {
-                        println!("Invalid input");
-                        input = "".to_string();
-                    }
-                }
+            if !utilities::confirm(
+                format!(
+                    "Are you sure you want to set the views of {} to {}?",
+                    videos[video_index].name, views
+                )
+                .as_str(),
+                None,
+                Some("Video update aborted."),
+                Some(true),
+            ) {
+                return;
             }
         }
         None => {}
@@ -329,28 +316,13 @@ pub fn handle_delete_video(video_query: VideoQuery) {
         panic!("Video was found but its index wasn't. This should never happen.");
     }
 
-    println!(
-        "Are you sure you want to remove this video? ([Y]es/[n]o)\n{:?}",
-        video
-    );
-
-    let mut input = "".to_string();
-    loop {
-        io::stdin()
-            .read_line(&mut input)
-            .expect("Failed to read line");
-
-        match input.to_lowercase().trim() {
-            "y" | "yes" | "" => break,
-            "n" | "no" => {
-                println!("Video deletion cancelled.");
-                return;
-            }
-            _ => {
-                println!("Invalid input");
-                input = "".to_string();
-            }
-        }
+    if !utilities::confirm(
+        "Are you sure you want to delete this video?",
+        Some(format!("{:?}", video).as_str()),
+        Some("Video deletion cancelled."),
+        Some(true),
+    ) {
+        return;
     }
 
     let video_index = video_index.unwrap();
