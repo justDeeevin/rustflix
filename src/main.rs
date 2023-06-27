@@ -2,6 +2,8 @@ mod args;
 use args::{CommandType, RustflixArgs};
 use clap::Parser;
 
+static OUT_DIR: &str = env!("OUT_DIR");
+
 fn main() {
     let args = RustflixArgs::parse();
 

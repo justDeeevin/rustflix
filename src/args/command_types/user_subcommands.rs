@@ -96,7 +96,8 @@ fn generate_valid_id(users: &Vec<User>) -> u32 {
 ///
 /// * `create_user` - The arguments for the user creation
 pub fn handle_create_user(create_user: CreateUser) {
-    let path = Path::new("users.bc");
+    let path = format!("{}/users.bin", crate::OUT_DIR);
+    let path = Path::new(path.as_str());
     let mut users: Vec<User> = if path.exists() {
         let file = File::open(path).unwrap();
         bincode::deserialize_from(file).unwrap()
@@ -243,7 +244,8 @@ pub fn handle_update_user(update_user: UpdateUser) {
         return;
     }
 
-    let path = Path::new("users.bc");
+    let path = format!("{}/users.bin", crate::OUT_DIR);
+    let path = Path::new(path.as_str());
     let mut users: Vec<User> = if path.exists() {
         let file = File::open(path).unwrap();
         bincode::deserialize_from(file).unwrap()
@@ -324,7 +326,8 @@ pub fn handle_delete_user(user_query: UserQuery) {
         return;
     }
 
-    let path = Path::new("users.bc");
+    let path = format!("{}/users.bin", crate::OUT_DIR);
+    let path = Path::new(path.as_str());
     let mut users: Vec<User> = if path.exists() {
         let file = File::open(path).unwrap();
         bincode::deserialize_from(file).unwrap()
@@ -452,7 +455,8 @@ pub struct ShowUser {
 }
 
 pub fn handle_list_users(show_user: ShowUser) {
-    let path = Path::new("users.bc");
+    let path = format!("{}/users.bin", crate::OUT_DIR);
+    let path = Path::new(path.as_str());
     let users: Vec<User> = if path.exists() {
         let file = File::open(path).unwrap();
         bincode::deserialize_from(file).unwrap()

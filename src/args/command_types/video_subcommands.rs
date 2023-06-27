@@ -71,7 +71,8 @@ fn generate_valid_id(videos: &Vec<Video>) -> u32 {
 ///
 /// * `create_video` - The arguments for the video creation
 pub fn handle_create_video(create_video: CreateVideo) {
-    let path = Path::new("videos.bc");
+    let path = format!("{}/videos.bc", crate::OUT_DIR);
+    let path = Path::new(path.as_str());
     let mut videos: Vec<Video> = if path.exists() {
         let file = File::open(path).unwrap();
         bincode::deserialize_from(file).unwrap()
@@ -195,7 +196,8 @@ pub fn handle_update_video(update_video: UpdateVideo) {
         return;
     }
 
-    let path = Path::new("videos.bc");
+    let path = format!("{}/videos.bc", crate::OUT_DIR);
+    let path = Path::new(path.as_str());
     let mut videos: Vec<Video> = if path.exists() {
         let file = File::open(path).unwrap();
         bincode::deserialize_from(file).unwrap()
@@ -292,7 +294,8 @@ pub fn handle_delete_video(video_query: VideoQuery) {
         return;
     }
 
-    let path = Path::new("videos.bc");
+    let path = format!("{}/videos.bc", crate::OUT_DIR);
+    let path = Path::new(path.as_str());
     let mut videos: Vec<Video> = if path.exists() {
         let file = File::open(path).unwrap();
         bincode::deserialize_from(file).unwrap()
@@ -406,7 +409,8 @@ pub struct ListVideo {
 }
 
 pub fn handle_list_videos(show_video: ListVideo) {
-    let path = Path::new("videos.bc");
+    let path = format!("{}/videos.bc", crate::OUT_DIR);
+    let path = Path::new(path.as_str());
     let videos: Vec<Video> = if path.exists() {
         let file = File::open(path).unwrap();
         bincode::deserialize_from(file).unwrap()
