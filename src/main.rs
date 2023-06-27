@@ -8,5 +8,6 @@ fn main() {
     match args.entity_type {
         EntityType::User(user_command) => args::handle_user_command(user_command),
         EntityType::Video(video_command) => args::handle_video_command(video_command),
+        EntityType::View(view_command) => args::handle_view_command(view_command),
     }
 }

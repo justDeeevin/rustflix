@@ -9,6 +9,7 @@ use std::path::Path;
 pub struct Video {
     pub id: u32,
     pub name: String,
+    pub views: u32,
 }
 
 #[derive(Debug, Args)]
@@ -81,6 +82,7 @@ pub fn handle_create_video(create_video: CreateVideo) {
     let video = Video {
         id: generate_valid_id(&videos),
         name: create_video.name,
+        views: 0,
     };
 
     videos.push(video.clone());
@@ -114,7 +116,7 @@ pub struct UpdateVideo {
 /// * `NoVideoFound` - No video was found matching the given query
 /// * `MultipleVideosFound` - Multiple videos were found matching the given query. `RepeatedQueries` contains the number of matches for each query field.
 #[derive(Debug)]
-enum FindError {
+pub enum FindError {
     NoVideoFound,
     MultipleVideosFound(MatchedQueries),
 }
@@ -126,9 +128,9 @@ enum FindError {
 /// * `id` - The number of matches for the ID query
 /// * `name` - The number of matches for the name query
 #[derive(Debug)]
-struct MatchedQueries {
-    id: u32,
-    name: u32,
+pub struct MatchedQueries {
+    pub id: u32,
+    pub name: u32,
 }
 
 /// Finds a video in the given list of videos matching the given query
@@ -141,7 +143,7 @@ struct MatchedQueries {
 /// # Returns
 ///
 /// The video matching the given query. If multiple or none are found, returns a `FindError` variant matching the error case.
-fn find_video<'a>(videos: &'a Vec<Video>, query: &VideoQuery) -> Result<&'a Video, FindError> {
+pub fn find_video<'a>(videos: &'a Vec<Video>, query: &VideoQuery) -> Result<&'a Video, FindError> {
     let mut found_videos: Vec<&Video> = vec![];
     let mut id_matches = 0;
     let mut name_matches = 0;
@@ -224,7 +226,7 @@ pub fn handle_update_video(update_video: UpdateVideo) {
 
     let video_index = videos.iter().position(|u| u == video);
 
-    if video_index == None {
+    if video_index.is_none() {
         panic!("Video was found but its index wasn't. This should never happen.");
     }
 
@@ -285,7 +287,7 @@ pub fn handle_delete_video(video_query: VideoQuery) {
 
     let video_index = videos.iter().position(|u| u == video);
 
-    if video_index == None {
+    if video_index.is_none() {
         panic!("Video was found but its index wasn't. This should never happen.");
     }
 
@@ -307,7 +309,7 @@ pub fn handle_delete_video(video_query: VideoQuery) {
             return;
         } else if input == "" {
         } else if input != "y" && input != "yes" {
-            println!("Invalid input");
+            eprintln!("Invalid input");
             input = "".to_string();
             continue;
         }
@@ -369,7 +371,7 @@ pub struct ListVideo {
     pub name: Option<String>,
 }
 
-pub fn handle_list_video(show_video: ListVideo) {
+pub fn handle_list_videos(show_video: ListVideo) {
     let path = Path::new("videos.bc");
     let videos: Vec<Video> = if path.exists() {
         let file = File::open(path).unwrap();

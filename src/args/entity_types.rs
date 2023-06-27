@@ -1,9 +1,11 @@
 pub mod user_subcommands;
 pub mod video_subcommands;
+pub mod view_subcommands;
 
 use clap::{Args, Subcommand};
 use user_subcommands::*;
 use video_subcommands::*;
+use view_subcommands::*;
 
 #[derive(Debug, Args)]
 pub struct UserCommand {
@@ -39,4 +41,18 @@ pub enum VideoSubcommand {
     Delete(VideoQuery),
     /// List one or more videos
     List(ListVideo),
+}
+
+#[derive(Debug, Args)]
+pub struct ViewCommand {
+    #[clap(subcommand)]
+    pub subcommand: ViewSubcommand,
+}
+
+#[derive(Debug, Subcommand)]
+pub enum ViewSubcommand {
+    /// Add one or more views to a video
+    Add(AddViews),
+    /// Show the views on a video
+    Show(VideoQuery),
 }

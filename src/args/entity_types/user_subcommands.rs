@@ -282,7 +282,7 @@ pub fn handle_update_user(update_user: UpdateUser) {
 
     let user_index = users.iter().position(|u| u == user);
 
-    if user_index == None {
+    if user_index.is_none() {
         panic!("User was found but its index wasn't. This should never happen.");
     }
 
@@ -357,7 +357,7 @@ pub fn handle_delete_user(user_query: UserQuery) {
 
     let user_index = users.iter().position(|u| u == user);
 
-    if user_index == None {
+    if user_index.is_none() {
         panic!("User was found but its index wasn't. This should never happen.");
     }
 
