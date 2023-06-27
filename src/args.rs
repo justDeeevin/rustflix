@@ -1,17 +1,17 @@
-pub mod entity_types;
+pub mod command_types;
 
 use clap::{Parser, Subcommand};
-use entity_types::*;
+use command_types::*;
 
 #[derive(Parser, Debug)]
 #[clap(about, version)]
 pub struct RustflixArgs {
     #[clap(subcommand)]
-    pub entity_type: EntityType,
+    pub command_type: CommandType,
 }
 
 #[derive(Debug, Subcommand)]
-pub enum EntityType {
+pub enum CommandType {
     /// Create, update, delete, or show users
     User(UserCommand),
     /// Create, update, delete, or show videos

@@ -1,4 +1,4 @@
-use crate::args::entity_types::video_subcommands::{find_video, FindError, Video, VideoQuery};
+use crate::args::command_types::video_subcommands::{find_video, FindError, Video, VideoQuery};
 use clap::Args;
 use std::fs::File;
 use std::path::Path;
