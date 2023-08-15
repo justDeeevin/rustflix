@@ -33,7 +33,7 @@ pub fn handle_add_views(add_views: AddViews) {
 
     let video_query = VideoQuery {
         name: add_views.name.clone(),
-        id: add_views.id.clone(),
+        id: add_views.id,
     };
 
     let video = find_video(&videos, &video_query);
