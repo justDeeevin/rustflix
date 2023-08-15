@@ -420,3 +420,54 @@ pub fn handle_list_videos(show_video: ListVideo) {
         println!("{:?}", video);
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn make_videos() -> Vec<Video> {
+        vec![
+            Video {
+                id: 2829304751,
+                name: "test".to_string(),
+                views: 0,
+            },
+            Video {
+                id: 1525162981,
+                name: "test2".to_string(),
+                views: 0,
+            },
+            Video {
+                id: 986712257,
+                name: "test3".to_string(),
+                views: 0,
+            },
+            Video {
+                id: 2453202404,
+                name: "test4".to_string(),
+                views: 0,
+            },
+            Video {
+                id: 4036985520,
+                name: "test5".to_string(),
+                views: 0,
+            },
+        ]
+    }
+
+    #[test]
+    fn test_has_id() {
+        let videos = make_videos();
+        assert_eq!(has_id(&videos, 2829304751), true);
+        assert_eq!(has_id(&videos, 1), false);
+    }
+
+    #[test]
+    fn test_generate_valid_id() {
+        let videos = make_videos();
+        for _ in 0..100 {
+            let id = generate_valid_id(&videos);
+            assert_eq!(has_id(&videos, id), false);
+        }
+    }
+}
