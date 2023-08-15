@@ -70,7 +70,7 @@ pub fn handle_add_views(add_views: AddViews) {
         video.clone().name
     );
 
-    let current_views = videos[video_index].views.clone();
+    let current_views = videos[video_index].views;
     videos[video_index].views = current_views + add_views.number_to_add;
 
     let file = File::create(path).unwrap();
