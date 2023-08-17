@@ -171,7 +171,7 @@ pub fn find_video<'a>(videos: &'a Vec<Video>, query: &VideoQuery) -> Result<&'a 
         }
     }
 
-    if found_videos.is_empty() {
+    if found_videos.len() == 0 {
         return Err(FindError::NoVideoFound);
     }
 
@@ -206,7 +206,7 @@ pub fn handle_update_video(update_video: UpdateVideo) {
     };
 
     let video_query = VideoQuery {
-        id: update_video.query_id,
+        id: update_video.query_id.clone(),
         name: update_video.query_name.clone(),
     };
 
@@ -240,23 +240,27 @@ pub fn handle_update_video(update_video: UpdateVideo) {
 
     let og_video_state = videos[video_index].clone();
 
-    if let Some(ref name) = update_video.new_name {
-        videos[video_index].name = name.clone()
+    match update_video.new_name {
+        Some(ref name) => videos[video_index].name = name.clone(),
+        None => {}
     }
 
-    if let Some(views) = update_video.new_views {
-        if !utilities::confirm(
-            format!(
-                "Are you sure you want to set the views of {} to {}?",
-                videos[video_index].name, views
-            )
-            .as_str(),
-            None,
-            Some("Video update aborted."),
-            Some(true),
-        ) {
-            return;
+    match update_video.new_views {
+        Some(views) => {
+            if !utilities::confirm(
+                format!(
+                    "Are you sure you want to set the views of {} to {}?",
+                    videos[video_index].name, views
+                )
+                .as_str(),
+                None,
+                Some("Video update aborted."),
+                Some(true),
+            ) {
+                return;
+            }
         }
+        None => {}
     }
 
     let file = File::create(path).unwrap();
@@ -450,8 +454,8 @@ mod tests {
     #[test]
     fn test_has_id() {
         let videos = make_videos();
-        assert!(has_id(&videos, 2829304751));
-        assert!(!has_id(&videos, 1));
+        assert_eq!(has_id(&videos, 2829304751), true);
+        assert_eq!(has_id(&videos, 1), false);
     }
 
     #[test]
@@ -459,7 +463,7 @@ mod tests {
         let videos = make_videos();
         for _ in 0..100 {
             let id = generate_valid_id(&videos);
-            assert!(!has_id(&videos, id));
+            assert_eq!(has_id(&videos, id), false);
         }
     }
 }

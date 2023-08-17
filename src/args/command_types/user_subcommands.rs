@@ -215,7 +215,7 @@ fn find_user<'a>(users: &'a Vec<User>, query: &UserQuery) -> Result<&'a User, Fi
         }
     }
 
-    if found_users.len() == 0 {
+    if found_users.is_empty() {
         return Err(FindError::NoUserFound);
     }
 
@@ -254,7 +254,7 @@ pub fn handle_update_user(update_user: UpdateUser) {
     };
 
     let user_query = UserQuery {
-        id: update_user.query_id.clone(),
+        id: update_user.query_id,
         name: update_user.query_name.clone(),
         email: update_user.query_email.clone(),
     };
@@ -292,14 +292,12 @@ pub fn handle_update_user(update_user: UpdateUser) {
 
     let og_user_state = users[user_index].clone();
 
-    match update_user.new_name {
-        Some(ref name) => users[user_index].name = name.clone(),
-        None => {}
+    if let Some(ref name) = update_user.new_name {
+        users[user_index].name = name.clone()
     }
 
-    match update_user.new_email {
-        Some(ref email) => users[user_index].email = email.clone(),
-        None => {}
+    if let Some(ref email) = update_user.new_email {
+        users[user_index].email = email.clone()
     }
 
     let file = File::create(path).unwrap();
@@ -387,29 +385,23 @@ fn find_users(users: &Vec<User>, user_query: &UserQuery) -> Result<Vec<User>, Fi
     let mut found_users: Vec<User> = vec![];
 
     for user in users {
-        if user_query.id.is_some() {
-            if user.id == user_query.id.clone().unwrap() {
-                found_users.push(user.clone());
-                continue;
-            }
+        if user_query.id.is_some() && user.id == user_query.id.unwrap() {
+            found_users.push(user.clone());
+            continue;
         }
 
-        if user_query.name.is_some() {
-            if user.name == user_query.name.clone().unwrap() {
-                found_users.push(user.clone());
-                continue;
-            }
+        if user_query.name.is_some() && user.name == user_query.name.clone().unwrap() {
+            found_users.push(user.clone());
+            continue;
         }
 
-        if user_query.email.is_some() {
-            if user.email == user_query.email.clone().unwrap() {
-                found_users.push(user.clone());
-                continue;
-            }
+        if user_query.email.is_some() && user.email == user_query.email.clone().unwrap() {
+            found_users.push(user.clone());
+            continue;
         }
     }
 
-    if found_users.len() == 0 {
+    if found_users.is_empty() {
         return Err(FindError::NoUserFound);
     }
 
